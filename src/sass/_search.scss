@@ -1,0 +1,28 @@
+.search {
+    &__bar {
+        width: 60%;
+        margin: 0 auto;
+        background: $main-color-1;
+        border-radius: 25px;
+    }
+
+    &__input,
+    &__btn {
+        background: $main-color-1;
+        border: none;
+        padding: 10px;
+    }
+
+    &__input {
+        width: 69%;
+        border-radius: 25px 0 0 25px;
+        outline: none;
+    }
+
+    &__btn {
+        width: 30%;
+        border-left: 1px solid black;
+        border-radius: 0 25px 25px 0;
+        cursor: pointer;
+    }
+}

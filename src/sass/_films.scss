@@ -1,0 +1,18 @@
+.films {
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    &__img-block {
+        border-radius: 15px;
+        margin: 1%;
+        width: 23%;
+    }
+
+    &__img {
+        border-radius: 15px;
+        width: 100%;
+
+    }
+}
