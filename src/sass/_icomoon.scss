@@ -27,8 +27,6 @@
   
   .icon-linkedin:before {
     content: "\e900";
-    color: red;
-    font-size: 30px;
   }
   .icon-twitter:before {
     content: "\e901";
@@ -71,14 +69,17 @@
   }
   
 
-  .icon-holder {
-      display: block;
+  .icon {
+    display: block;
     position: relative;
-    color: red;
-    z-index: 10;
+    color: #b95f5f;
+    font-size: 30px;
     cursor: pointer;
-    // width: 10px;
-    // height: 10px;
     right: -15px;
     bottom: 50px;
+    transition: 0.5s all;
+
+    &:hover {
+      color: #971313;
+    }
 }

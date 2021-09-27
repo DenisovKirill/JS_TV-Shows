@@ -1,3 +1,45 @@
+//Избавиться от зависимости от inp.value!!!
+
+//Tabs
+
+const tabsParent = document.getElementById('tabParent');
+const tabs = document.querySelectorAll('.header__link');
+const tabsContent = document.getElementsByClassName('tabsContent');
+
+const hideTabsContent = () => {
+    for (let item of tabsContent) {
+        item.classList.remove('visible', 'fade');
+        item.classList.add('hidden');
+    }
+
+    tabs.forEach(item => {
+        item.classList.remove('header__link_active', 'fade')
+    })
+}
+
+const showTabsContent = (i = 1) => {
+    tabsContent[i].classList.remove('hidden');
+    tabsContent[i].classList.add('visible', 'fade');
+    tabs[i].classList.add('header__link_active', 'fade')
+}
+
+hideTabsContent();
+showTabsContent();
+
+tabsParent.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target && target.classList.contains('header__link')) {
+        tabs.forEach((item, i) => {
+            if (target === item) {
+                hideTabsContent();
+                showTabsContent(i);
+            }
+        })
+    }
+})
+
+//Search
+
 const serverBtn = document.getElementById('serverButton');
 const inp = document.getElementById('inp');
 const filmContainer = document.getElementById('filmContainer');
@@ -14,10 +56,10 @@ const clearContainer = (container) => {
 }
 
 const setFilm = ({ img, id }, targetBlock) => {
-    const div = createElement('div', 'films__img-block');
+    const div = createElement('div', 'films__img-block fade');
     div.setAttribute('data-id', id)
     const imgElem = createElement('img', 'films__img');
-    const heart = createElement('i', 'icon-holder icon-linkedin');
+    const heart = createElement('i', 'icon icon-circle-right');
 
     imgElem.setAttribute('src', img);
     targetBlock.append(div);
@@ -44,18 +86,18 @@ const sendAction = () => { //Переписать валидацию.
     }
 }
 
-const handleLoad = (data) => {
-    clearContainer(filmContainer);
+const handleLoad = (data, container) => {
+    clearContainer(container);
 
     if(data.length) {
-        spawnFilms(data, filmContainer);
+        spawnFilms(data, container);
     } else {
-        filmContainer.append('NOT FOUND');
+        container.append('NOT FOUND');
     }
 }
 
 const handleError = ({ status }) => {
-    console.log('Ошибка соединения ', status);//Раньше тут был XMLHttpRequest. Проверить правильность статуса.
+    console.log('Ошибка соединения ', status);
 }
 
 const handleFetch = async (querry) => {
@@ -72,7 +114,7 @@ const handleFetch = async (querry) => {
 const loadFilms = (querry) => {
     handleFetch(querry)
     .then((data) => {
-        handleLoad(data)
+        handleLoad(data, filmContainer);
     })
 }
 
@@ -90,13 +132,12 @@ serverBtn.addEventListener('click', () => {
 
 
 //Filters
-
+//Поменять местами поиск и выбор фильтра!
 const genreSelection = document.getElementById('genre');
 const langSelection = document.getElementById('language');
-// console.log(langSelection.value);
 
 const choseLang = (arr) => {
-   return arr.filter(item => item?.show?.language === "Japanese")
+   return arr.filter(item => item?.show?.language === "Japanese");
 }
 
 
@@ -120,7 +161,7 @@ const selectGenre = (select, querry, value) => {
             .then((data => {
                 console.log(inp.value);
                 console.log(data);
-                handleLoad(data);
+                handleLoad(data, filmContainer);
             }))
     })
 }
@@ -129,30 +170,48 @@ selectGenre(langSelection);
 selectGenre(genreSelection);
 
 //Favourite
-const selected = [];
+//Почему local storage перетирается?
+const favouriteContainer = document.getElementById('favouriteContainer');
+let selected = [];
 
 filmContainer.addEventListener('click', (event) => {
-    if (event.target && event.target.classList.contains('icon-linkedin')) {
-        console.log(event.target.parentElement.getAttribute('data-id'))
-        foo(inp.value, event.target);
+    if (event.target && event.target.classList.contains('icon-circle-right')) {
+        console.log(event.target.parentElement.getAttribute('data-id'));
+        addToFavourite(inp.value, event.target);
     }
 })
 
 
-const foo = (querry, elem) => {
+const addToFavourite = (querry, elem) => {
     handleFetch(querry)
     .then((data) => {
         data.forEach(item => {
             if (+item?.show?.id === +elem.parentElement.getAttribute('data-id')) {
-                console.log(item);
-                localStorage.setItem('Item', JSON.stringify(item));
+                // console.log(item);
+                selected = [...selected, item];
+                console.log(selected);
+                selected.forEach((item, i) => {
+                    localStorage.setItem(`Item ${i}`, JSON.stringify(item));
+                })
             }
         })
     })
 }
 
-// const toFavoriteButton = document.querySelectorAll('.heart');
-// console.log(toFavoriteButton)
+const spawnFavourite = () => {
+    let arr = [];
+    for (let i = 0, length = localStorage.length; i < length; i++) {
+        let item = localStorage.getItem(localStorage.key(i));
+        arr = [...arr, JSON.parse(item)];
+    }
+    console.log(arr);
+    handleLoad(arr, favouriteContainer);
+}
+
+spawnFavourite();
 
 
-//Избавиться от зависимости от inp.value!!!
+// localStorage.clear();
+
+
+
