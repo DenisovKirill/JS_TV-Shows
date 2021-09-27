@@ -141,14 +141,14 @@ const choseLang = (arr) => {
 }
 
 
-const chooseSomething = (querry, value) => {
-    handleFetch(querry)
-    .then((data) => {
-        const a = data.filter(item => item?.show?.language === value);
-        // console.log(a);
-    })
-}
-chooseSomething('elf', 'Japanese');
+// const chooseSomething = (querry, value) => {
+//     handleFetch(querry)
+//     .then((data) => {
+//         const a = data.filter(item => item?.show?.language === value);
+//         // console.log(a);
+//     })
+// }
+// chooseSomething('elf', 'Japanese');
 
 
 const selectGenre = (select, querry, value) => {
@@ -170,7 +170,6 @@ selectGenre(langSelection);
 selectGenre(genreSelection);
 
 //Favourite
-//Почему local storage перетирается?
 const favouriteContainer = document.getElementById('favouriteContainer');
 let selected = [];
 
@@ -178,20 +177,19 @@ filmContainer.addEventListener('click', (event) => {
     if (event.target && event.target.classList.contains('icon-circle-right')) {
         console.log(event.target.parentElement.getAttribute('data-id'));
         addToFavourite(inp.value, event.target);
+        spawnFavourite(); //Почему последний добавляется через итерацию?
     }
 })
-
 
 const addToFavourite = (querry, elem) => {
     handleFetch(querry)
     .then((data) => {
         data.forEach(item => {
             if (+item?.show?.id === +elem.parentElement.getAttribute('data-id')) {
-                // console.log(item);
                 selected = [...selected, item];
                 console.log(selected);
                 selected.forEach((item, i) => {
-                    localStorage.setItem(`Item ${i}`, JSON.stringify(item));
+                    localStorage.setItem(`Item ${item.show?.id}`, JSON.stringify(item));
                 })
             }
         })
@@ -210,8 +208,23 @@ const spawnFavourite = () => {
 
 spawnFavourite();
 
-
 // localStorage.clear();
 
 
 
+
+//Modal
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modalClose');
+
+filmContainer.addEventListener('click', (event) => {
+    if (event.target && event.target.classList.contains('films__img')) {
+        modal.classList.remove('hidden');
+        modal.classList.add('visible');
+    }
+})
+
+modalClose.addEventListener('click', () => {
+    modal.classList.remove('visible');
+    modal.classList.add('hidden');
+})
