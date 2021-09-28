@@ -39,7 +39,7 @@ tabsParent.addEventListener('click', (event) => {
 //Search
 
 const serverBtn = document.getElementById('serverButton');
-const inp = document.getElementById('inp');
+const searchInput = document.getElementById('inp');
 const filmContainer = document.getElementById('filmContainer');
 
 
@@ -76,11 +76,11 @@ const spawnFilms = (filmData, targetBlock) => {
 }
 
 const sendAction = () => { //Переписать валидацию.
-    if (inp.value.length > 2) {
+    if (searchInput.value.length > 2) {
         //Как блокировать fetch?
-        inp.style.border = '1px solid grey';
+        searchInput.style.border = '1px solid grey';
     } else {
-        inp.style.border = '1px solid red';
+        searchInput.style.border = '1px solid red';
     }
 }
 
@@ -100,8 +100,8 @@ const handleError = ({ status }) => {
 
 const handleFetch = async () => {
     let url;
-    if(inp.value) {
-        url = `http://api.tvmaze.com/search/shows?q=${inp.value}`;
+    if(searchInput.value) {
+        url = `http://api.tvmaze.com/search/shows?q=${searchInput.value}`;
     } else {
         url = 'http://api.tvmaze.com/shows?page=1';
     }
@@ -128,7 +128,7 @@ serverBtn.addEventListener('click', () => {
     loadFilms();
 });
 
-// inp.addEventListener('keydown', (e) => {
+// searchInput.addEventListener('keydown', (e) => {
 //     if (e.code = 'Enter') {
 //         handleFetch();
 //     }
@@ -137,22 +137,19 @@ serverBtn.addEventListener('click', () => {
 
 //Filters
 //Поменять местами поиск и выбор фильтра!
-
-const filters = {
-    search: '',
-    genere: '',
-    language: ''
-}
-
 const genreSelection = document.getElementById('genre');
 const langSelection = document.getElementById('language');
 
+const choseLang = (arr) => {
+   return arr.filter(item => item?.show?.language === "Japanese");
+}
 
-const selectFilter = (select, value) => {
+
+const selectFilter = (select) => {
     select.addEventListener('change', () => {
         handleFetch()
             .then((data) => {
-                return data.filter(item =>  item?.show?.language === langSelection.value);
+                return data.filter(item =>  item?.show?.language === select.value);
             })
             .then((data => {
                 handleLoad(data, filmContainer);
