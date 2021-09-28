@@ -1,5 +1,3 @@
-//Избавиться от зависимости от inp.value!!!
-
 //Tabs
 
 const tabsParent = document.getElementById('tabParent');
@@ -70,8 +68,8 @@ const setFilm = ({ img, id }, targetBlock) => {
 const spawnFilms = (filmData, targetBlock) => {
     filmData.forEach(item => {
         const filmObj = {
-            img: item.show?.image?.medium,
-            id: item.show?.id
+            img: item.show?.image?.medium || item?.image?.medium,
+            id: item?.show?.id || item?.id
         };
         setFilm(filmObj, targetBlock);
     });
@@ -100,74 +98,70 @@ const handleError = ({ status }) => {
     console.log('Ошибка соединения ', status);
 }
 
-const handleFetch = async (querry) => {
-    const promise = await fetch(`http://api.tvmaze.com/search/shows?q=${querry}`);
+const handleFetch = async () => {
+    let url;
+    if(inp.value) {
+        url = `http://api.tvmaze.com/search/shows?q=${inp.value}`;
+    } else {
+        url = 'http://api.tvmaze.com/shows?page=1';
+    }
+
+    const promise = await fetch(url);
     try {
         const data = await promise.json();
-        // console.log(data);
         return data;
     } catch {
         handleError (promise.status);
     }
 }
 
-const loadFilms = (querry) => {
-    handleFetch(querry)
+const loadFilms = () => {
+    handleFetch()
     .then((data) => {
         handleLoad(data, filmContainer);
     })
 }
 
-loadFilms('work');
+loadFilms();
 
 serverBtn.addEventListener('click', () => {
-    loadFilms(inp.value);
+    loadFilms();
 });
 
 // inp.addEventListener('keydown', (e) => {
 //     if (e.code = 'Enter') {
-//         handleFetch(inp.value);
+//         handleFetch();
 //     }
 // });
 
 
 //Filters
 //Поменять местами поиск и выбор фильтра!
+
+const filters = {
+    search: '',
+    genere: '',
+    language: ''
+}
+
 const genreSelection = document.getElementById('genre');
 const langSelection = document.getElementById('language');
 
-const choseLang = (arr) => {
-   return arr.filter(item => item?.show?.language === "Japanese");
-}
 
-
-// const chooseSomething = (querry, value) => {
-//     handleFetch(querry)
-//     .then((data) => {
-//         const a = data.filter(item => item?.show?.language === value);
-//         // console.log(a);
-//     })
-// }
-// chooseSomething('elf', 'Japanese');
-
-
-const selectGenre = (select, querry, value) => {
+const selectFilter = (select, value) => {
     select.addEventListener('change', () => {
-        handleFetch(inp.value)
+        handleFetch()
             .then((data) => {
-                console.log(langSelection.value);
                 return data.filter(item =>  item?.show?.language === langSelection.value);
             })
             .then((data => {
-                console.log(inp.value);
-                console.log(data);
                 handleLoad(data, filmContainer);
             }))
     })
 }
 
-selectGenre(langSelection);
-selectGenre(genreSelection);
+selectFilter(langSelection);
+selectFilter(genreSelection);
 
 //Favourite
 const favouriteContainer = document.getElementById('favouriteContainer');
@@ -176,20 +170,19 @@ let selected = [];
 filmContainer.addEventListener('click', (event) => {
     if (event.target && event.target.classList.contains('icon-circle-right')) {
         console.log(event.target.parentElement.getAttribute('data-id'));
-        addToFavourite(inp.value, event.target);
+        addToFavourite(event.target);
         spawnFavourite(); //Почему последний добавляется через итерацию?
     }
 })
 
-const addToFavourite = (querry, elem) => {
-    handleFetch(querry)
+const addToFavourite = (elem) => {
+    handleFetch()
     .then((data) => {
         data.forEach(item => {
-            if (+item?.show?.id === +elem.parentElement.getAttribute('data-id')) {
+            if ((+item?.show?.id || +item?.id) === +elem.parentElement.getAttribute('data-id')) {
                 selected = [...selected, item];
-                console.log(selected);
                 selected.forEach((item, i) => {
-                    localStorage.setItem(`Item ${item.show?.id}`, JSON.stringify(item));
+                    localStorage.setItem(`Item ${item.show?.id || item?.id}`, JSON.stringify(item));
                 })
             }
         })
@@ -202,16 +195,12 @@ const spawnFavourite = () => {
         let item = localStorage.getItem(localStorage.key(i));
         arr = [...arr, JSON.parse(item)];
     }
-    console.log(arr);
     handleLoad(arr, favouriteContainer);
 }
 
 spawnFavourite();
 
 // localStorage.clear();
-
-
-
 
 //Modal
 const modal = document.getElementById('modal');
