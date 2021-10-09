@@ -4,6 +4,9 @@
     &__holder {
         width: 60%;
         margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     &__select {
         background: $main-color-1;
@@ -11,5 +14,9 @@
         padding: 5px 10px;
         margin: 5px;
         border-radius: 15px;
+    }
+
+    label {
+        margin-left: 5px;
     }
 }

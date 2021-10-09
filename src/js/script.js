@@ -109,11 +109,20 @@ const handleFetch = async () => {
     const promise = await fetch(url);
     try {
         const data = await promise.json();
-        return data;
+        // return data
+        return data.slice(0, 40);
     } catch {
         handleError (promise.status);
     }
 }
+
+// const getDataLength = () => {
+//     handleFetch()
+//         .then((data) => {
+//             // console.log(data.length);
+//             return data.length
+//         })
+// }
 
 const loadFilms = () => {
     handleFetch()
@@ -138,6 +147,7 @@ serverBtn.addEventListener('click', () => {
 //Filters
 //Поменять местами поиск и выбор фильтра!
 const genreSelection = document.getElementById('genre');
+console.dir(genreSelection)
 const langSelection = document.getElementById('language');
 
 const choseLang = (arr) => {
@@ -214,3 +224,58 @@ modalClose.addEventListener('click', () => {
     modal.classList.remove('visible');
     modal.classList.add('hidden');
 })
+
+
+
+//Pagination
+const pagination = document.getElementById('pagination');
+const itemsPerPage = document.getElementById('itemsPerPage')
+
+const createPaginationItems = (number) => {
+    const item = createElement('li', 'pagination__item');
+    item.innerText = number;
+    pagination.append(item);
+}
+
+const foo = (arg) => {
+    let itemsOnPage  = +itemsPerPage.value || 8;
+    let pageNum = +arg.innerText || 1;
+    let start = (pageNum - 1) * itemsOnPage;
+    let end = start + itemsOnPage;
+
+    handleFetch()
+        .then((data) => {
+            return data.slice(start, end);
+    })
+        .then((data) => {
+            handleLoad(data, filmContainer);
+        })
+}
+
+const renderPaginationItems = () => {
+    clearContainer(pagination);
+    handleFetch()
+    .then((data => {
+        // console.log(data.length)
+        const paginationLength = Math.ceil(+data.length / +itemsPerPage.value);
+        console.log(paginationLength)
+        for(let i = 1; i <= paginationLength; i++) {
+            createPaginationItems(i);
+            foo(itemsPerPage.value);//разобраться, что передаем!!!
+        }
+    }))
+}
+
+itemsPerPage.addEventListener('change', renderPaginationItems)
+
+// renderPaginationItems()
+
+pagination.addEventListener('click', (event) => {
+    const t = event.target;
+    if (t && t.classList.contains('pagination__item')) {
+        foo(t)
+    }
+})
+
+
+
