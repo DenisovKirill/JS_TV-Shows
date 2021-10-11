@@ -21,15 +21,16 @@
             </div>
         </header>
         <main>
-            <section class="search">
+            <section class="about tabsContent hidden">
+                <div class="container" id="aboutContainer"></div>
+            </section>
+            <section class="films tabsContent">
                 <div class="container">
                     <form class="search__bar">
                         <input class="search__input" id="inp" type="text">
                         <button class="search__btn" id="serverButton">Search</button>
                     </form>
                 </div>
-            </section>
-            <section class="filter">
                 <div class="container">
                     <div class="filter__holder">
                         <label for="genre">Genre</label>
@@ -58,12 +59,11 @@
                         </select>
                     </div>
                 </div>
-            </section>
-            <section class="about tabsContent hidden">
-                <div class="container" id="aboutContainer"></div>
-            </section>
-            <section class="films tabsContent">
                 <div class="container" id="filmContainer"></div>
+                <div class="container">
+                    <ul class="pagination" id="pagination"></ul>
+                    </ul>
+                </div>
             </section>
             <section class="favourite tabsContent hidden">
                 <div class="container" id="favouriteContainer"></div>
@@ -71,15 +71,7 @@
             <section class="contacts tabsContent hidden">
                 <div class="container" id="contactsContainer"></div>
             </section>
-            <div class="container">
-                <ul class="pagination" id="pagination">
-                    <!-- <li class="pagination__item">1</li>
-                    <li class="pagination__item">2</li>
-                    <li class="pagination__item">3</li>
-                    <li class="pagination__item">4</li>
-                    <li class="pagination__item">5</li> -->
-                </ul>
-            </div>
+
 
             <div class="modal hidden" id="modal">
                 <div class="modal__window">

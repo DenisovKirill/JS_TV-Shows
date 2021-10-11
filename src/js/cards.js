@@ -32,7 +32,7 @@ const spawnFilms = (filmData, targetBlock) => {
 
 export const handleLoad = (data, container) => {
     clearContainer(container);
-
+    // spawnFilms(data, container);
     if(data.length) {
         spawnFilms(data, container);
     } else {

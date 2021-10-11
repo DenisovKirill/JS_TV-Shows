@@ -1,54 +1,88 @@
 import { getData } from './getData.js';
 import { tabsInit } from './tabs.js';
-import { createElement, handleLoad, clearContainer } from './create.js';
+import { createElement, handleLoad, clearContainer } from './cards.js';
 import { modalOperating } from './modal.js'
-// import { handleLoad } from './create.js';
 
 tabsInit();
+modalOperating();
 
-//Search
+
 export const searchInput = document.getElementById('inp');
 const serverBtn = document.getElementById('serverButton');
 const filmContainer = document.getElementById('filmContainer');
+const genreSelection = document.getElementById('genre');
+const langSelection = document.getElementById('language');
+
+let genre = genreSelection.value;
+let language = langSelection.value;
 
 let films = [];
 
-const loadFilms = async () => {
-    films = await getData();
-    handleLoad(films, filmContainer);
-}
-
-loadFilms();
-
-serverBtn.addEventListener('click', () => {
-    loadFilms();
-});
+/**
+ * 1.Collect filters
+ * 2.get films using search filter
+ * 3.filter films by genre and language
+ */
 
 
 //Filters
-//Поменять местами поиск и выбор фильтра!
-const genreSelection = document.getElementById('genre');
-console.dir(genreSelection)
-const langSelection = document.getElementById('language');
 
-const selectFilter = (select) => {
-    select.addEventListener('change', async () => {
-        films = await getData();
-        const filteredFilms = films.filter(item =>  item?.show?.language === select.value);
-        handleLoad(filteredFilms, filmContainer);
-    })
+langSelection.addEventListener('change', () => {
+    language = langSelection.value;
+    // loadFilms(films, genre, language);
+})
+
+genreSelection.addEventListener('change', async () => {
+    // films = await getData();
+    genre = genreSelection.value;
+})
+
+//Search and load
+
+const chooseFilms = (films, genre, language) => {
+    const chosen = films.map((item) => (item.show ? item.show : item));
+
+    if (genre === 'All' && language === 'All') {
+        return chosen;
+    }
+
+    if (genre !== 'All' && language !== 'All') {
+        return chosen.filter((film) => film.genres.includes(genre) && film.language === language);
+    }
+
+    if (genre === 'All' && language !== 'All') {
+        return chosen.filter((film) => film.language === language);
+    }
+
+    if (genre !== 'All' && language === 'All') {
+        return chosen.filter((film) => film.genres.includes(genre));
+    }
 }
 
-selectFilter(langSelection);
-selectFilter(genreSelection);
+const loadFilms = async (films, genre, language) => {
+    films = await getData();
+    const filtered = films.length ? chooseFilms(films,  genre, language) : [];
+
+    if(filtered.length) {
+        handleLoad(filtered, filmContainer);
+    }
+}
+
+serverBtn.addEventListener('click', async () => {
+    films = await getData();
+    loadFilms(films, genre, language);
+});
+
+
 
 //Favourite
 const favouriteContainer = document.getElementById('favouriteContainer');
-let selected = [];
+// let selected = [];
+if (!localStorage.getItem('favoriteInStorage')) localStorage.setItem('favoriteInStorage', JSON.stringify([]));
 
 filmContainer.addEventListener('click', (event) => {
     if (event.target && event.target.classList.contains('icon-circle-right')) {
-        console.log(event.target.parentElement.getAttribute('data-id'));
+        // console.log(event.target.parentElement.getAttribute('data-id'));
         addToFavourite(event.target);
         spawnFavourite(); //Почему последний добавляется через итерацию?
     }
@@ -56,33 +90,45 @@ filmContainer.addEventListener('click', (event) => {
 
 const addToFavourite = async (elem) => {
     films = await getData();
+    const storageFilms = localStorage.getItem('favoriteInStorage');
+    const a = [ ...JSON.parse(storageFilms ?  storageFilms : JSON.stringify([]))];
     films.forEach(item => {
-        if ((+item?.show?.id || +item?.id) === +elem.parentElement.getAttribute('data-id')) {
-            selected = [...selected, item];
-            selected.forEach((item, i) => {
-                localStorage.setItem(`Item ${item.show?.id || item?.id}`, JSON.stringify(item));
-            })
+        const elemId = +item?.show?.id || +item?.id;
+        if (elemId === +elem.parentElement.getAttribute('data-id')) {
+            const exist = a.find(item => elemId === item?.id);
+            if (!exist)  a.push(item);
         }
     });
+    localStorage.setItem('favoriteInStorage', JSON.stringify(a));
+    spawnFavourite();
 }
+
+// let favoriteInStorage = [];
+
 
 const spawnFavourite = () => {
-    let arr = [];
-    for (let i = 0, length = localStorage.length; i < length; i++) {
-        let item = localStorage.getItem(localStorage.key(i));
-        arr = [...arr, JSON.parse(item)];
-    }
-    handleLoad(arr, favouriteContainer);
+    const data = localStorage.getItem('favoriteInStorage');
+    handleLoad(data ? JSON.parse(data) : [], favouriteContainer);
 }
 
-spawnFavourite();
+// const spawnFavourite = () => {
+//     let arr = [];
+//     for (let i = 0, length = localStorage.length; i < length; i++) {
+//         console.log(localStorage.length);
+//         let item = localStorage.getItem(localStorage.key(i));
+//         console.log('localStorage', localStorage.key(i))
+//         arr = [...arr, JSON.parse(item)];
+//     }
+//     handleLoad(arr, favouriteContainer);
+// }
 
+
+spawnFavourite();
 // localStorage.clear();
 
-modalOperating();
 
 //Pagination
-//Правим баг с загрузкой запароса.
+
 const pagination = document.getElementById('pagination');
 const itemsPerPage = document.getElementById('itemsPerPage')
 
@@ -102,12 +148,10 @@ const foo = async (arg) => {
     handleLoad(films.slice(start, end), filmContainer);
 }
 
-const renderPaginationItems = async () => {
+const renderPaginationItems = () => {
     clearContainer(pagination);
 
-    films = await getData();
-    const paginationLength = Math.ceil(+films.length / +itemsPerPage.value);
-        for(let i = 1; i <= paginationLength; i++) {
+        for(let i = 1; i <= 15; i++) {
         createPaginationItems(i);
         foo(itemsPerPage.value);//разобраться, что передаем!!!
     }
@@ -116,8 +160,6 @@ const renderPaginationItems = async () => {
 renderPaginationItems();
 itemsPerPage.addEventListener('change', renderPaginationItems);
 
-//renderPaginationItems();
-
 pagination.addEventListener('click', (event) => {
     const t = event.target;
     if (t && t.classList.contains('pagination__item')) {
@@ -125,3 +167,5 @@ pagination.addEventListener('click', (event) => {
     }
 })
 
+/************************************************************** */
+let page = 1;

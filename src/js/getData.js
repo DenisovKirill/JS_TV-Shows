@@ -5,14 +5,14 @@ const handleError = ({ status }) => {
     console.log('Ошибка соединения ', status);
 }
 
-const sendAction = () => { //Переписать валидацию.
-    if (searchInput.value.length > 2) {
-        //Как блокировать fetch?
-        searchInput.style.border = '1px solid grey';
-    } else {
-        searchInput.style.border = '1px solid red';
-    }
-}
+// const sendAction = () => { //Переписать валидацию.
+//     if (searchInput.value.length > 2) {
+//         //Как блокировать fetch?
+//         searchInput.style.border = '1px solid grey';
+//     } else {
+//         searchInput.style.border = '1px solid red';
+//     }
+// }
 
 export const getData = async () => {
     let url;
@@ -25,7 +25,7 @@ export const getData = async () => {
     const promise = await fetch(url);
     try {
         const data = await promise.json();
-        return data.slice(0, 40);
+        return data.slice(0, 140);
     } catch {
         handleError (promise.status);
     }
