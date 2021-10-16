@@ -1,5 +1,6 @@
 import { getData } from './getData.js';
 import { spawnFilms, clearContainer } from './cards.js';
+// import { tabsContent } from 
 
 export const favouriteInit = () => {
     let films = [];

@@ -4,11 +4,8 @@ import { createElement, handleLoad, clearContainer } from './cards.js';
 import { modalInit } from './modal.js';
 import { favouriteInit } from './favourite.js';
 
-tabsInit();
-modalInit();
-favouriteInit()
-
 export const searchInput = document.getElementById('inp');
+export const tabsContent = document.querySelectorAll('.tabsContent');
 const serverBtn = document.getElementById('serverButton');
 const filmContainer = document.getElementById('filmContainer');
 const genreSelection = document.getElementById('genre');
@@ -22,6 +19,10 @@ let language = langSelection.value;
 let qty = itemsPerPage.value;
 let films = [];
 
+
+tabsInit();
+modalInit();
+favouriteInit()
 
 //Search and load
 
