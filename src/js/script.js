@@ -1,11 +1,12 @@
 import { getData } from './getData.js';
 import { tabsInit } from './tabs.js';
 import { createElement, handleLoad, clearContainer } from './cards.js';
-import { modalOperating } from './modal.js'
+import { modalInit } from './modal.js';
+import { favouriteInit } from './favourite.js';
 
 tabsInit();
-modalOperating();
-
+modalInit();
+favouriteInit()
 
 export const searchInput = document.getElementById('inp');
 const serverBtn = document.getElementById('serverButton');
@@ -42,37 +43,31 @@ const chooseFilms = (films, genre, language, number) => {
     if (genre !== 'All' && language === 'All') {
         return chosen.filter((film) => film.genres.includes(genre)).slice(0, number);
     }
-}
+};
 
-const loadFilms = async (films, genre, language, number) => {
-    films = await getData();
+const loadFilms = async (films, genre, language, number, attr) => {
+    films = await getData(attr);
     const filtered = films.length ? chooseFilms(films,  genre, language, number) : [];
     if(filtered.length) {
         handleLoad(filtered, filmContainer);
     }
-}
-
-const initialLoad = async () => {
-    films = await getData();
-    loadFilms(films, genre, language, qty);
-}
-
+};
 
 //Filters
 
 langSelection.addEventListener('change', () => {
     language = langSelection.value;
-})
+});
 
 genreSelection.addEventListener('change', async () => {
     genre = genreSelection.value;
-})
+});
 
 itemsPerPage.addEventListener('change', () => {
     qty = itemsPerPage.value;
     films = getData();
-    initialLoad();
-})
+    loadFilms(films, genre, language, qty);
+});
 
 
 const clearFilters = () => {
@@ -81,56 +76,20 @@ const clearFilters = () => {
     itemsPerPage.value = 8;
     qty = 8;
     searchInput.value = '';
-    initialLoad();
-}
+    loadFilms(films, genre, language, qty);
+};
 
 window.onload = function() {
     clearFilters();
   };
 
-initialLoad();
+loadFilms(films, genre, language, qty);
 
 serverBtn.addEventListener('click', () => {
-    initialLoad();
+    loadFilms(films, genre, language, qty, searchInput.value);
     pagination.style.display = 'none';
 });
 
-
-//Favourite
-const favouriteContainer = document.getElementById('favouriteContainer');
-if (!localStorage.getItem('favoriteInStorage')) localStorage.setItem('favoriteInStorage', JSON.stringify([]));
-
-filmContainer.addEventListener('click', (event) => {
-    if (event.target && event.target.classList.contains('icon-circle-right')) {
-        // console.log(event.target.parentElement.getAttribute('data-id'));
-        addToFavourite(event.target);
-        spawnFavourite();
-    }
-})
-
-const addToFavourite = async (elem) => {
-    films = await getData();
-    const storageFilms = localStorage.getItem('favoriteInStorage');
-    const a = [ ...JSON.parse(storageFilms ?  storageFilms : JSON.stringify([]))];
-    films.forEach(item => {
-        const elemId = +item?.show?.id || +item?.id;
-        if (elemId === +elem.parentElement.getAttribute('data-id')) {
-            const exist = a.find(item => elemId === item?.id);
-            if (!exist)  a.push(item);
-        }
-    });
-    localStorage.setItem('favoriteInStorage', JSON.stringify(a));
-    spawnFavourite();
-}
-
-
-const spawnFavourite = () => {
-    const data = localStorage.getItem('favoriteInStorage');
-    handleLoad(data ? JSON.parse(data) : [], favouriteContainer);
-}
-
-spawnFavourite();
-// localStorage.clear();
 
 
 //Pagination
@@ -139,14 +98,14 @@ const createPaginationItems = (number) => {
     const item = createElement('li', 'pagination__item');
     item.innerText = number;
     pagination.append(item);
-}
+};
 
 const renderPaginationItems = () => {
     clearContainer(pagination);
         for(let i = 1; i <= 15; i++) {
         createPaginationItems(i);
     }
-}
+};
 
 renderPaginationItems();
 // itemsPerPage.addEventListener('change', renderPaginationItems);
@@ -156,6 +115,6 @@ pagination.addEventListener('click', (event) => {
     const t = event.target;
     if (t && t.classList.contains('pagination__item')) {
         page = t.innerText;
-        initialLoad();
+        loadFilms(films, genre, language, qty);
     }
-})
+});

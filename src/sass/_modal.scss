@@ -10,17 +10,18 @@
     background-color: rgba(0,0,0,.5);
 
     &__window {
-        max-width: 500px;
+        max-width: 1000px;
         margin: 100px auto;
     }
 
-    &__content {
+    &__inner {
         position: relative;
         width: 100%;
-        padding: 40px;
-        background-color: #fff;
+        padding: 15px;
+        background-color: $main-color-1;
+        color: #000;
         border: 1px solid rgba(0,0,0,.2);
-        border-radius: 4px;
+        border-radius: 15px;
         max-height: 80vh;
         overflow-y: auto;
     }
@@ -40,7 +41,23 @@
 
     &__title {
         text-align: center;
-        font-size: 22px;
+        font-size: 24px;
         text-transform: uppercase;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    &__main {
+        display: flex;
+    }
+
+    &__img {
+        height: 300px;
+        width: auto;
+    }
+
+    &__descr {
+        padding: 0 15px;
+        font-size: 18px;
     }
 }

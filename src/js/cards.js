@@ -14,8 +14,8 @@ const setFilm = ({ img, id, title }, targetBlock) => {
     const imgElem = createElement('img', 'films__img');
     const heart = createElement('i', 'icon icon-circle-right');
     div.setAttribute('data-id', id);
-    
-    titleElem.innerHTML = title;
+
+    titleElem.innerText = title;
     imgElem.setAttribute('src', img);
     targetBlock.append(div);
     div.append(titleElem);
@@ -23,7 +23,7 @@ const setFilm = ({ img, id, title }, targetBlock) => {
     div.append(heart);
 }
 
-const spawnFilms = (filmData, targetBlock) => {
+export const spawnFilms = (filmData, targetBlock) => {
     filmData.forEach(item => {
         const filmObj = {
             img: item?.image?.medium,
