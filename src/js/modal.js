@@ -77,5 +77,4 @@ export const modalInit = () => {
         modalInfo.append(modalPremiere);
         modalInfo.append(modalRating)
     };
-
 };

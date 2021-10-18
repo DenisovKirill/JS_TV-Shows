@@ -8,10 +8,13 @@ export const searchInput = document.getElementById('inp');
 export const tabsContent = document.querySelectorAll('.tabsContent');
 const serverBtn = document.getElementById('serverButton');
 const filmContainer = document.getElementById('filmContainer');
+const paginationList = document.getElementById('pagination');
 const genreSelection = document.getElementById('genre');
 const langSelection = document.getElementById('language');
 const itemsPerPage = document.getElementById('itemsPerPage');
-const paginationList = document.getElementById('pagination');
+const backToMain = document.querySelector('.search__return-btn');
+const paginationBlock = document.querySelector('.pagination')
+const filterHolder = document.querySelector('.filter__holder');
 const paginationDrop = document.querySelector('.pagination__drop');
 const paginationHolder = document.querySelector('.pagination__holder')
 const paginationPrev = document.querySelector('.pagination__prev-btn');
@@ -21,7 +24,7 @@ const paginationMaximum = document.querySelector('.pagination__maximum');
 
 export let paginationPage = 1;
 let paginationItemsOnPage = 10;
-let initialFilmsOnPage = 8;
+let initialFilmsOnPage = 12;
 let genre = genreSelection.value;
 let language = langSelection.value;
 let filmsOnPage = itemsPerPage.value;
@@ -30,7 +33,8 @@ let films = [];
 
 tabsInit();
 modalInit();
-favouriteInit()
+favouriteInit();
+
 
 //Search and load
 
@@ -59,6 +63,11 @@ const loadFilms = async (films, genre, language, number, attr) => {
     const filtered = films.length ? chooseFilms(films,  genre, language, number) : [];
     if(filtered.length) {
         handleLoad(filtered, filmContainer);
+    } else {
+        clearContainer(filmContainer);
+        const noFilmsMessage = createElement('div', 'no-films-msg');
+        noFilmsMessage.innerText = 'No films was found'
+        filmContainer.append(noFilmsMessage);
     }
 };
 
@@ -79,27 +88,38 @@ itemsPerPage.addEventListener('change', () => {
 });
 
 
-const clearFilters = () => {
+const resetPage = () => {
     genreSelection.value = 'All';
     langSelection.value = 'All';
+    genre = 'All';
+    language = 'All';
     itemsPerPage.value = initialFilmsOnPage;
     filmsOnPage = initialFilmsOnPage;
+    // paginationPage = 1;
+    paginationCurrent.innerText = paginationPage;
     searchInput.value = '';
     loadFilms(films, genre, language, filmsOnPage);
 };
 
 window.onload = function() {
-    clearFilters();
+    resetPage();
   };
 
-loadFilms(films, genre, language, filmsOnPage);
+// loadFilms(films, genre, language, filmsOnPage); !!!
 
 serverBtn.addEventListener('click', () => {
     loadFilms(films, genre, language, filmsOnPage, searchInput.value);
-    paginationList.style.display = 'none';
+    paginationBlock.style.display = 'none';
+    filterHolder.style.display = 'none';
+    backToMain.style.display = 'block';
 });
 
-
+backToMain.addEventListener('click', ()=> {
+    resetPage();
+    paginationBlock.style.display = 'block';
+    filterHolder.style.display = 'flex';
+    backToMain.style.display = 'none';
+});
 
 //pagination
 

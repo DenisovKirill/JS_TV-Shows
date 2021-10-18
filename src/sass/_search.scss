@@ -1,7 +1,11 @@
 .search {
+    .container {
+        position: relative;
+    }
+
     &__bar {
         width: 60%;
-        margin: 0 auto;
+        margin: 10px auto;
         background: $main-color-1;
         border-radius: 25px;
     }
@@ -24,5 +28,27 @@
         border-left: 1px solid black;
         border-radius: 0 25px 25px 0;
         cursor: pointer;
+        transition: 0.5s all;;
+
+        &:hover {
+            background: $main-color-3;
+        }
+    }
+
+    &__return-btn {display: none;
+        position: absolute;
+        right: 500px;
+        top: 151px;
+        background: $main-color-1;
+        border: none;
+        padding: 10px;
+        margin: 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: 0.5s all;;
+
+        &:hover {
+            background: $main-color-3;
+          }
     }
 }

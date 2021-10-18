@@ -12,9 +12,9 @@ const setFilm = ({ img, id, title }, targetBlock) => {
     const div = createElement('div', 'films__img-block fade');
     const titleElem = createElement('h2', 'films__title');
     const imgElem = createElement('img', 'films__img');
-    const heart = createElement('i', 'icon icon-circle-right');
+    const heart = createElement('span', "icon icon-heart");
     div.setAttribute('data-id', id);
-
+    
     titleElem.innerText = title;
     imgElem.setAttribute('src', img);
     targetBlock.append(div);

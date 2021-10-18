@@ -11,7 +11,7 @@ export const favouriteInit = () => {
     };
 
     filmContainer.addEventListener('click', (event) => {
-        if (event.target && event.target.classList.contains('icon-circle-right')) {
+        if (event.target && event.target.classList.contains('icon-heart')) {
             console.log(event.target.parentElement.getAttribute('data-id'));
             addToFavourite(event.target, JSON.parse(localStorage.getItem('favoriteInStorage')));
             spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));

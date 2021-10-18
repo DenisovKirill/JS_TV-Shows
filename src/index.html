@@ -28,8 +28,9 @@
                 <div class="container">
                     <form class="search__bar">
                         <input class="search__input" id="inp" type="text">
-                        <button class="search__btn" id="serverButton">Search</button>
+                        <button type='button' class="search__btn" id="serverButton">Search</button>
                     </form>
+                    <button class="search__return-btn">Go Back</button>
                 </div>
                 <div class="container">
                     <div class="filter__holder">
@@ -54,8 +55,8 @@
                         <label for="itemsPerPage">Items per page</label>
                         <select class="filter__select" id="itemsPerPage" name="itemsPerPage">
                             <option value="4">4</option>
-                            <option selected value="8">8</option>
-                            <option value="12">12</option>
+                            <option value="8">8</option>
+                            <option selected value="12">12</option>
                         </select>
                     </div>
                 </div>
@@ -63,11 +64,15 @@
                 <div class="container">
                     <div class="pagination">
                         <div class="pagination__navigation">
-                            <button class="pagination__prev-btn">Prev</button>
+                            <button class="pagination__prev-btn">
+                                <span class="icon-arrow-left"></span>
+                            </button>
                             <span class="pagination__current">1</span>
                             <span class="pagination__drop">Of</span>
                             <span class="pagination__maximum">10</span>
-                            <button class="pagination__next-btn">Next</button>
+                            <button class="pagination__next-btn">
+                                <span class="icon-arrow-right"></span>
+                            </button>
                         </div>
                         <div class="pagination__holder hidden">
                             <ul class="pagination__list" id="pagination"></ul>

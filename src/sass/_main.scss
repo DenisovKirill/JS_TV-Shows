@@ -88,3 +88,16 @@ a {
 @keyframes fade {
     from{opacity: 0.1;}to{opacity: 1;}
 }
+
+.no-films-msg {
+    margin: 10px auto;
+    width: 300px;
+    color: #000;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    padding: 15px;
+    background: $main-color-1;
+    border: none;
+    border-radius: 15px;
+}

@@ -3,11 +3,12 @@
 
     &__holder {
         width: 60%;
-        margin: 15px auto;
+        margin: 5px auto;
         display: flex;
         align-items: center;
         justify-content: center;
     }
+
     &__select {
         background: $main-color-1;
         border: none;
