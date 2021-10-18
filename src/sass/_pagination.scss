@@ -1,6 +1,25 @@
 .pagination {
-    display: flex;
-    margin-bottom: 30px;
+    margin: 40px 0;
+    width: 100%;
+
+    &__navigation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__current,
+    &__drop,
+    &__maximum {
+        margin: 0 15px;
+        cursor: pointer;
+    }
+
+    &__list {
+        display: flex;
+        margin: 15px 0;
+        justify-content: center;
+    }
 
     &__item {
         text-align: center;

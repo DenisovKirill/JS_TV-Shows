@@ -59,9 +59,15 @@ export const modalInit = () => {
 
         modalTitle.innerText = item?.name;
         modalImage.setAttribute('src', item?.image?.medium);
-        modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}...`;
+        // modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}... || 'Uncknown'`;
+        if (item.summary) {
+            modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}`;
+        } else {
+            modalDescr.innerHTML = 'Uncknown';
+        }
+
         modalGenre.innerText = `Genres: ${item?.genres.join(', ') || 'Uncknown'}`;
-        modalPremiere.innerText = `Premiere: ${item?.premiered}`;
+        modalPremiere.innerText = `Premiere: ${item?.premiered}` || 'Uncknown';
         modalRating.innerText = `Average rating: ${item?.rating?.average || 'Uncknown'}`
 
         modalMain.append(modalImage);

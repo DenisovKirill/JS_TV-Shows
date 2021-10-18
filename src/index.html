@@ -61,8 +61,18 @@
                 </div>
                 <div class="container" id="filmContainer"></div>
                 <div class="container">
-                    <ul class="pagination" id="pagination"></ul>
-                    </ul>
+                    <div class="pagination">
+                        <div class="pagination__navigation">
+                            <button class="pagination__prev-btn">Prev</button>
+                            <span class="pagination__current">1</span>
+                            <span class="pagination__drop">Of</span>
+                            <span class="pagination__maximum">10</span>
+                            <button class="pagination__next-btn">Next</button>
+                        </div>
+                        <div class="pagination__holder hidden">
+                            <ul class="pagination__list" id="pagination"></ul>
+                        </div>
+                    </div>
                 </div>
             </section>
             <section class="favourite tabsContent hidden">

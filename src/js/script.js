@@ -11,12 +11,20 @@ const filmContainer = document.getElementById('filmContainer');
 const genreSelection = document.getElementById('genre');
 const langSelection = document.getElementById('language');
 const itemsPerPage = document.getElementById('itemsPerPage');
-const pagination = document.getElementById('pagination');
+const paginationList = document.getElementById('pagination');
+const paginationDrop = document.querySelector('.pagination__drop');
+const paginationHolder = document.querySelector('.pagination__holder')
+const paginationPrev = document.querySelector('.pagination__prev-btn');
+const paginationNext = document.querySelector('.pagination__next-btn');
+const paginationCurrent = document.querySelector('.pagination__current');
+const paginationMaximum = document.querySelector('.pagination__maximum');
 
-export let page = 1;
+export let paginationPage = 1;
+let paginationItemsOnPage = 10;
+let initialFilmsOnPage = 8;
 let genre = genreSelection.value;
 let language = langSelection.value;
-let qty = itemsPerPage.value;
+let filmsOnPage = itemsPerPage.value;
 let films = [];
 
 
@@ -65,57 +73,83 @@ genreSelection.addEventListener('change', async () => {
 });
 
 itemsPerPage.addEventListener('change', () => {
-    qty = itemsPerPage.value;
+    filmsOnPage = itemsPerPage.value;
     films = getData();
-    loadFilms(films, genre, language, qty);
+    loadFilms(films, genre, language, filmsOnPage);
 });
 
 
 const clearFilters = () => {
     genreSelection.value = 'All';
     langSelection.value = 'All';
-    itemsPerPage.value = 8;
-    qty = 8;
+    itemsPerPage.value = initialFilmsOnPage;
+    filmsOnPage = initialFilmsOnPage;
     searchInput.value = '';
-    loadFilms(films, genre, language, qty);
+    loadFilms(films, genre, language, filmsOnPage);
 };
 
 window.onload = function() {
     clearFilters();
   };
 
-loadFilms(films, genre, language, qty);
+loadFilms(films, genre, language, filmsOnPage);
 
 serverBtn.addEventListener('click', () => {
-    loadFilms(films, genre, language, qty, searchInput.value);
-    pagination.style.display = 'none';
+    loadFilms(films, genre, language, filmsOnPage, searchInput.value);
+    paginationList.style.display = 'none';
 });
 
 
 
-//Pagination
+//pagination
 
 const createPaginationItems = (number) => {
     const item = createElement('li', 'pagination__item');
     item.innerText = number;
-    pagination.append(item);
+    paginationList.append(item);
 };
 
 const renderPaginationItems = () => {
-    clearContainer(pagination);
-        for(let i = 1; i <= 15; i++) {
+    clearContainer(paginationList);
+        for(let i = 1; i <= paginationItemsOnPage; i++) {
         createPaginationItems(i);
     }
 };
 
+paginationDrop.addEventListener('click', ()=> {
+    paginationHolder.classList.toggle('hidden')
+});
+
 renderPaginationItems();
 // itemsPerPage.addEventListener('change', renderPaginationItems);
 
+paginationPrev.addEventListener('click', ()=> {
+    if (paginationPage > 1) {
+        paginationPage -= 1;
+        paginationCurrent.innerText = paginationPage;
+        loadFilms(films, genre, language, filmsOnPage);
+    }
+})
 
-pagination.addEventListener('click', (event) => {
-    const t = event.target;
-    if (t && t.classList.contains('pagination__item')) {
-        page = t.innerText;
-        loadFilms(films, genre, language, qty);
+paginationNext.addEventListener('click', ()=> {
+    if (paginationPage < paginationItemsOnPage) {
+        paginationPage += 1;
+        paginationCurrent.innerText = paginationPage;
+        loadFilms(films, genre, language, filmsOnPage);
+    }
+})
+
+paginationMaximum.addEventListener('click', ()=> {
+    paginationPage = paginationItemsOnPage;
+    paginationCurrent.innerText = paginationPage;
+    loadFilms(films, genre, language, filmsOnPage);
+})
+
+paginationList.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target && target.classList.contains('pagination__item')) {
+        paginationPage = +target.innerText;
+        paginationCurrent.innerText = paginationPage;
+        loadFilms(films, genre, language, filmsOnPage);
     }
 });
