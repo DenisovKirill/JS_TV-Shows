@@ -14,9 +14,9 @@ const setFilm = ({ img, id, title }, targetBlock) => {
     const imgElem = createElement('img', 'films__img');
     const heart = createElement('span', "icon icon-heart");
     div.setAttribute('data-id', id);
-    
+
     titleElem.innerText = title;
-    imgElem.setAttribute('src', img);
+    imgElem.setAttribute('src', img || '../img/no-img.jpg');
     targetBlock.append(div);
     div.append(titleElem);
     div.append(imgElem);
@@ -27,7 +27,7 @@ export const spawnFilms = (filmData, targetBlock) => {
     filmData.forEach(item => {
         const filmObj = {
             img: item?.image?.medium,
-            id: item.id,
+            id: item?.id,
             title: item?.name
         };
         setFilm(filmObj, targetBlock);
@@ -36,7 +36,7 @@ export const spawnFilms = (filmData, targetBlock) => {
 
 export const handleLoad = (data, container) => {
     clearContainer(container);
-    if(data.length) {
+    if (data.length) {
         spawnFilms(data, container);
     } else {
         container.append('NOT FOUND');

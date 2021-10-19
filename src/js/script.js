@@ -24,104 +24,123 @@ const paginationMaximum = document.querySelector('.pagination__maximum');
 
 export let paginationPage = 1;
 let paginationItemsOnPage = 10;
-let initialFilmsOnPage = 12;
+// let initialFilmsOnPage = 12;
 let genre = genreSelection.value;
 let language = langSelection.value;
 let filmsOnPage = itemsPerPage.value;
 let films = [];
 
-
 tabsInit();
 modalInit();
 favouriteInit();
 
-
 //Search and load
 
-const chooseFilms = (films, genre, language, number) => {
-    const chosen = films.map((item) => (item.show ? item.show : item));
+const chooseFilmsParams = {
+    films: films,
+    genre: genre,
+    language: language,
+    number: filmsOnPage
+};
 
-    if (genre === 'All' && language === 'All') {
-        return chosen.slice(0, number);
+const chooseFilms = (args) => {
+    const chosen = args.films.map((item) => (item.show ? item.show : item));
+
+    if (args.genre === 'All' && args.language === 'All') {
+        return chosen.slice(0, args.number);
     }
 
-    if (genre !== 'All' && language !== 'All') {
-        return chosen.filter((film) => film.genres.includes(genre) && film.language === language).slice(0, number);
+    if (args.genre !== 'All' && args.language !== 'All') {
+        return chosen.filter((film) => film.genres.includes(args.genre) && film.language === args.language)
+        .slice(0, args.number);
     }
 
-    if (genre === 'All' && language !== 'All') {
-        return chosen.filter((film) => film.language === language).slice(0, number);
+    if (args.genre === 'All' && args.language !== 'All') {
+        return chosen.filter((film) => film.language === args.language)
+        .slice(0, args.number);
     }
 
-    if (genre !== 'All' && language === 'All') {
-        return chosen.filter((film) => film.genres.includes(genre)).slice(0, number);
+    if (args.genre !== 'All' && args.language === 'All') {
+        return chosen.filter((film) => film.genres.includes(args.genre))
+        .slice(0, args.number);
     }
 };
 
-const loadFilms = async (films, genre, language, number, attr) => {
-    films = await getData(attr);
-    const filtered = films.length ? chooseFilms(films,  genre, language, number) : [];
-    if(filtered.length) {
+const loadFilms = async (args, attr) => {
+    args.films = await getData(attr);
+    const filtered = args.films.length ? chooseFilms(args) : [];
+    if (filtered.length) {
         handleLoad(filtered, filmContainer);
     } else {
         clearContainer(filmContainer);
         const noFilmsMessage = createElement('div', 'no-films-msg');
-        noFilmsMessage.innerText = 'No films was found'
+        noFilmsMessage.innerText = 'No films were found'
         filmContainer.append(noFilmsMessage);
     }
 };
 
 //Filters
 
+const changeOnSearch = () => {
+    paginationBlock.style.display = 'none';
+    // itemsPerPage.style.display = 'none';
+    backToMain.style.display = 'block';
+}
+
 langSelection.addEventListener('change', () => {
-    language = langSelection.value;
+    chooseFilmsParams.language = langSelection.value;
+    loadFilms(chooseFilmsParams);
+    changeOnSearch();
 });
 
 genreSelection.addEventListener('change', async () => {
-    genre = genreSelection.value;
+    chooseFilmsParams.genre = genreSelection.value;
+    loadFilms(chooseFilmsParams);
+    changeOnSearch();
 });
 
 itemsPerPage.addEventListener('change', () => {
-    filmsOnPage = itemsPerPage.value;
-    films = getData();
-    loadFilms(films, genre, language, filmsOnPage);
+    chooseFilmsParams.number = itemsPerPage.value;
+    loadFilms(chooseFilmsParams);
+    // changeOnSearch();
 });
 
 
 const resetPage = () => {
     genreSelection.value = 'All';
     langSelection.value = 'All';
-    genre = 'All';
-    language = 'All';
-    itemsPerPage.value = initialFilmsOnPage;
-    filmsOnPage = initialFilmsOnPage;
+    chooseFilmsParams.genre = 'All';
+    chooseFilmsParams.language = 'All';
+    // filmsOnPage = itemsPerPage.value;
+    // itemsPerPage.value = initialFilmsOnPage;
+    // filmsOnPage = initialFilmsOnPage;
     // paginationPage = 1;
     paginationCurrent.innerText = paginationPage;
     searchInput.value = '';
-    loadFilms(films, genre, language, filmsOnPage);
+    loadFilms(chooseFilmsParams);
 };
 
 window.onload = function() {
     resetPage();
   };
 
-// loadFilms(films, genre, language, filmsOnPage); !!!
+// loadFilms(chooseFilmsParams);
 
 serverBtn.addEventListener('click', () => {
-    loadFilms(films, genre, language, filmsOnPage, searchInput.value);
-    paginationBlock.style.display = 'none';
+    loadFilms(chooseFilmsParams, searchInput.value);
+    changeOnSearch();
     filterHolder.style.display = 'none';
-    backToMain.style.display = 'block';
 });
 
 backToMain.addEventListener('click', ()=> {
     resetPage();
+    itemsPerPage.style.display = 'block';
     paginationBlock.style.display = 'block';
     filterHolder.style.display = 'flex';
     backToMain.style.display = 'none';
 });
 
-//pagination
+//Pagination
 
 const createPaginationItems = (number) => {
     const item = createElement('li', 'pagination__item');
@@ -141,13 +160,12 @@ paginationDrop.addEventListener('click', ()=> {
 });
 
 renderPaginationItems();
-// itemsPerPage.addEventListener('change', renderPaginationItems);
 
 paginationPrev.addEventListener('click', ()=> {
     if (paginationPage > 1) {
         paginationPage -= 1;
         paginationCurrent.innerText = paginationPage;
-        loadFilms(films, genre, language, filmsOnPage);
+        loadFilms(chooseFilmsParams);
     }
 })
 
@@ -155,21 +173,20 @@ paginationNext.addEventListener('click', ()=> {
     if (paginationPage < paginationItemsOnPage) {
         paginationPage += 1;
         paginationCurrent.innerText = paginationPage;
-        loadFilms(films, genre, language, filmsOnPage);
+        loadFilms(chooseFilmsParams);
     }
 })
 
 paginationMaximum.addEventListener('click', ()=> {
     paginationPage = paginationItemsOnPage;
     paginationCurrent.innerText = paginationPage;
-    loadFilms(films, genre, language, filmsOnPage);
+    loadFilms(chooseFilmsParams);
 })
 
-paginationList.addEventListener('click', (event) => {
-    const target = event.target;
+paginationList.addEventListener('click', ({ target }) => {
     if (target && target.classList.contains('pagination__item')) {
         paginationPage = +target.innerText;
         paginationCurrent.innerText = paginationPage;
-        loadFilms(films, genre, language, filmsOnPage);
+        loadFilms(chooseFilmsParams);
     }
 });

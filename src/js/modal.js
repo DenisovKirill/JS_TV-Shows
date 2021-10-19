@@ -10,8 +10,7 @@ export const modalInit = () => {
     const descrLength = 600;
 
     tabsContent.forEach(item => {
-        item.addEventListener('click', async (event) => {
-            const target = event.target
+        item.addEventListener('click', async ({ target }) => {
             if (target && target.classList.contains('films__img')) {
                 modal.classList.remove('hidden');
                 modal.classList.add('visible');
@@ -31,13 +30,13 @@ export const modalInit = () => {
     modalClose.addEventListener('click', closeModal);
 
     modal.addEventListener('click', (e) => {
-        if(e.target === modal) {
+        if (e.target === modal) {
             closeModal();
         }
     });
 
     document.addEventListener('keydown', (e) => {
-        if(e.code === 'Escape' && modal.classList.contains('visible')){
+        if (e.code === 'Escape' && modal.classList.contains('visible')){
             closeModal();
         }
     });
@@ -58,17 +57,17 @@ export const modalInit = () => {
         const modalRating  = createElement('div', 'modal__rating');
 
         modalTitle.innerText = item?.name;
-        modalImage.setAttribute('src', item?.image?.medium);
-        // modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}... || 'Uncknown'`;
+        modalImage.setAttribute('src', item?.image?.medium || '../img/no-img.jpg');
+        // modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}... || 'Unknown'`;
         if (item.summary) {
             modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}`;
         } else {
-            modalDescr.innerHTML = 'Uncknown';
+            modalDescr.innerHTML = 'Unknown';
         }
 
-        modalGenre.innerText = `Genres: ${item?.genres.join(', ') || 'Uncknown'}`;
-        modalPremiere.innerText = `Premiere: ${item?.premiered}` || 'Uncknown';
-        modalRating.innerText = `Average rating: ${item?.rating?.average || 'Uncknown'}`
+        modalGenre.innerText = `Genres: ${item?.genres.join(', ') || 'Unknown'}`;
+        modalPremiere.innerText = `Premiere: ${item?.premiered}` || 'Unknown';
+        modalRating.innerText = `Average rating: ${item?.rating?.average || 'Unknown'}`
 
         modalMain.append(modalImage);
         modalMain.append(modalInfo);

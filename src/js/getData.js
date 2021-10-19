@@ -2,7 +2,7 @@ import { API_URL } from './constants.js';
 import { paginationPage } from './script.js'
 
 const handleError = ({ status }) => {
-    console.log('Ошибка соединения ', status);
+    console.log('Error: ', status);
 }
 
 export const getData = async (param) => {

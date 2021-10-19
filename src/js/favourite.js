@@ -1,49 +1,39 @@
 import { getData } from './getData.js';
 import { spawnFilms, clearContainer } from './cards.js';
-// import { tabsContent } from 
 
 export const favouriteInit = () => {
-    let films = [];
     const favouriteContainer = document.getElementById('favouriteContainer');
 
     if (!localStorage.getItem('favoriteInStorage')) {
         localStorage.setItem('favoriteInStorage', JSON.stringify([]));
     };
 
-    filmContainer.addEventListener('click', (event) => {
-        if (event.target && event.target.classList.contains('icon-heart')) {
-            console.log(event.target.parentElement.getAttribute('data-id'));
-            addToFavourite(event.target, JSON.parse(localStorage.getItem('favoriteInStorage')));
+    filmContainer.addEventListener('click', ({ target }) => {
+        if (target && target.classList.contains('icon-heart')) {
+            const filmId = +target.parentElement.getAttribute('data-id');
+            console.log(filmId);
+            addToFavourite(target, filmId);
             spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
         }
     });
 
-    const addToFavourite = async (elem) => {
-        films = await getData();
+    const addToFavourite = async (elem, id) => {
+        const film = await getData(id);
         const storageFilms = localStorage.getItem('favoriteInStorage');
-        const film = [ ...JSON.parse(storageFilms ?  storageFilms : JSON.stringify([]))];
-        // const film = [ ...JSON.parse(storageFilms)]
-        films.forEach(item => {
-            const elemId = item?.id;
+        let fav = [...JSON.parse(storageFilms ?  storageFilms : JSON.stringify([]))];
+        const elemId = film?.id;
             if (elemId === +elem.parentElement.getAttribute('data-id')) {
-                // console.log(film);
-                const exist = film.find(item => +item?.id === elemId);
-                console.log(+item?.id === elemId)
-                //Асинхронность!
+                const exist = fav.find(item => +item === elemId);
                 if (!exist)  {
-                    film.push(item.id);
+                    fav = [...fav, film.id]
                 }
             }
-        });
-        localStorage.setItem('favoriteInStorage', JSON.stringify(film));
+
+        localStorage.setItem('favoriteInStorage', JSON.stringify(fav));
         spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
     };
 
-
-    const spawnFavourite = async (array) => {
-        // const favLocal = localStorage.getItem('favoriteInStorage')
-        // const data = favLocal ? JSON.parse(favLocal) : [];
-        const data = array;
+    const spawnFavourite = async (data) => {
         let arr = [];
 
         for (const id of data) {
@@ -55,6 +45,5 @@ export const favouriteInit = () => {
     };
 
     spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
-    localStorage.clear();
-
+    // localStorage.clear();
 }
