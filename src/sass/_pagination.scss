@@ -1,6 +1,7 @@
 .pagination {
     margin: 40px 0;
     width: 100%;
+    font-weight: 600;
 
     &__navigation {
         display: flex;
@@ -11,8 +12,20 @@
     &__current,
     &__drop,
     &__maximum {
-        margin: 0 15px;
+        margin: 0 5px;
         cursor: pointer;
+    }
+
+    &__drop {
+        font-size: 18px;
+        font-weight: 600;
+        transition: all 0.5s;
+
+        &:hover {
+            font-size: 28px;
+            font-weight: 800;
+            color: $main-color-2;
+        }
     }
 
     &__list {
@@ -22,18 +35,34 @@
     }
 
     &__item {
-        text-align: center;
-        width: 30px;
-        height: 20px;
-        background-color: #C4C4C4;
-        border: 1px black solid;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $main-color-1;
+        border: none;
+        padding: 5px 10px;
         border-radius: 5px;
         margin: 0 5px;
         cursor: pointer;
         transition: all 0.5s;
 
         &:hover {
-            background-color: #a7a0a0;
+            background-color: $main-color-3;
+        }
+    }
+
+    &__prev-btn,
+    &__next-btn {
+        background-color: $main-color-1;
+        border-radius: 5px;
+        color: #FFF;
+        border: none;
+        padding: 5px 15px;
+        transition: all 0.5s;
+
+        &:hover {
+            color:  $main-color-2;
+            background-color: $main-color-3;
         }
     }
 }
