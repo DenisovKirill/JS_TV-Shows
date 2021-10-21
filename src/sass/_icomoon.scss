@@ -56,6 +56,15 @@
     transition: 0.5s all;
 
     &:hover {
-      color: $main-color-2;
+      color: $main-color-3;
     }
+}
+
+
+.icon-active {
+  color: $main-color-2;
+
+  &:hover {
+    color: $main-color-2;
+  }
 }

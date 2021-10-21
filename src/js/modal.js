@@ -46,8 +46,7 @@ export const modalInit = () => {
 
         const modalTitle = createElement('div', 'modal__title');
         const modalMain = createElement('div', 'modal__main');
-        modalContent.append(modalTitle);
-        modalContent.append(modalMain);
+        modalContent.append(modalTitle, modalMain);
 
         const modalImage = createElement('img', 'modal__img');
         const modalInfo = createElement('div', 'modal__info');
@@ -58,22 +57,17 @@ export const modalInit = () => {
 
         modalTitle.innerText = item?.name;
         modalImage.setAttribute('src', item?.image?.medium || '../img/no-img.jpg');
-        // modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}... || 'Unknown'`;
         if (item.summary) {
-            modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}`;
+            modalDescr.innerHTML = `${item?.summary.slice(0, descrLength)}...`;
         } else {
             modalDescr.innerHTML = 'Unknown';
         }
 
         modalGenre.innerText = `Genres: ${item?.genres.join(', ') || 'Unknown'}`;
-        modalPremiere.innerText = `Premiere: ${item?.premiered}` || 'Unknown';
+        modalPremiere.innerText = `Premiere: ${item?.premiered || 'Unknown'}`;
         modalRating.innerText = `Average rating: ${item?.rating?.average || 'Unknown'}`
 
-        modalMain.append(modalImage);
-        modalMain.append(modalInfo);
-        modalInfo.append(modalDescr);
-        modalInfo.append(modalGenre);
-        modalInfo.append(modalPremiere);
-        modalInfo.append(modalRating)
+        modalMain.append(modalImage, modalInfo);
+        modalInfo.append(modalDescr, modalGenre, modalPremiere, modalRating);
     };
 };
