@@ -68,7 +68,7 @@ export const favouriteInit = () => {
     };
 
     spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
-    localStorage.clear();
+    // localStorage.clear();
 }
 
 export function checkFavourite(id, elem) {
