@@ -1,4 +1,3 @@
-//Modal
 import { getData } from './getData.js';
 import { createElement, clearContainer } from './cards.js';
 import { tabsContent } from './script.js'

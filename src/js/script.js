@@ -4,33 +4,27 @@ import { tabsInit } from './tabs.js';
 import { createElement, handleLoad, clearContainer } from './cards.js';
 import { modalInit } from './modal.js';
 import { favouriteInit } from './favourite.js';
+import { initPagination } from './pagination.js';
 
 export const searchInput = document.getElementById('inp');
 export const tabsContent = document.querySelectorAll('.tabsContent');
 export const filmContainer = document.getElementById('filmContainer');
+export const paginationCurrent = document.querySelector('.pagination__current');
 const serverBtn = document.getElementById('serverButton');
-const paginationList = document.getElementById('pagination');
 const genreSelection = document.getElementById('genre');
 const langSelection = document.getElementById('language');
 const itemsPerPage = document.getElementById('itemsPerPage');
 const filterHolder = document.querySelector('.filter__holder');
 const backToMain = document.querySelector('.search__return-btn');
-const paginationBlock = document.querySelector('.pagination')
-const paginationDrop = document.querySelector('.pagination__drop');
-const paginationHolder = document.querySelector('.pagination__holder')
-const paginationPrev = document.querySelector('.pagination__prev-btn');
-const paginationNext = document.querySelector('.pagination__next-btn');
-const paginationCurrent = document.querySelector('.pagination__current');
-const paginationMaximum = document.querySelector('.pagination__maximum');
+const paginationBlock = document.querySelector('.pagination');
 
-export let paginationPage = 1;
-let paginationItemsOnPage = 10;
-// let initialFilmsOnPage = 12;
+let paginationPage = 1;
 let genre = genreSelection.value;
 let language = langSelection.value;
 let filmsOnPage = itemsPerPage.value;
 let films = [];
 
+initPagination();
 logInit();
 tabsInit();
 modalInit();
@@ -47,7 +41,6 @@ export const chooseFilmsParams = {
 
 const chooseFilms = (args) => {
     const chosen = args.films.map((item) => (item.show ? item.show : item));
-    //Переписать в свич?
     if (args.genre === 'All' && args.language === 'All') {
         return chosen.slice(0, args.number);
     }
@@ -70,7 +63,13 @@ const chooseFilms = (args) => {
 
 export const loadFilms = async (args, attr) => {
     args.films = await getData(attr);
-    const filtered = args.films.length ? chooseFilms(args) : [];
+    // const filtered = args.films.length ? chooseFilms(args) : [];
+    let filtered;
+    if (args.films.length) {
+        filtered = chooseFilms(args)
+    } else {
+        filtered = []};
+
     if (filtered.length) {
         handleLoad(filtered, filmContainer);
     } else {
@@ -81,11 +80,17 @@ export const loadFilms = async (args, attr) => {
     }
 };
 
+
+serverBtn.addEventListener('click', () => {
+    loadFilms(chooseFilmsParams, searchInput.value);
+    changeOnSearch();
+    filterHolder.style.display = 'none';
+});
+
 //Filters
 
 const changeOnSearch = () => {
     paginationBlock.style.display = 'none';
-    // itemsPerPage.style.display = 'none';
     backToMain.style.display = 'block';
 }
 
@@ -104,29 +109,17 @@ genreSelection.addEventListener('change', async () => {
 itemsPerPage.addEventListener('change', () => {
     chooseFilmsParams.number = itemsPerPage.value;
     loadFilms(chooseFilmsParams, searchInput.value);
-    // changeOnSearch();
 });
-
 
 export const resetPage = () => {
     genreSelection.value = 'All';
     langSelection.value = 'All';
     chooseFilmsParams.genre = 'All';
     chooseFilmsParams.language = 'All';
-    // filmsOnPage = itemsPerPage.value;
-    // itemsPerPage.value = initialFilmsOnPage;
-    // filmsOnPage = initialFilmsOnPage;
-    // paginationPage = 1;
     paginationCurrent.innerText = paginationPage;
     searchInput.value = '';
     loadFilms(chooseFilmsParams);
 };
-
-serverBtn.addEventListener('click', () => {
-    loadFilms(chooseFilmsParams, searchInput.value);
-    changeOnSearch();
-    filterHolder.style.display = 'none';
-});
 
 backToMain.addEventListener('click', ()=> {
     resetPage();
@@ -134,55 +127,4 @@ backToMain.addEventListener('click', ()=> {
     paginationBlock.style.display = 'block';
     filterHolder.style.display = 'flex';
     backToMain.style.display = 'none';
-});
-
-//Pagination
-
-const createPaginationItems = (number) => {
-    const item = createElement('li', 'pagination__item');
-    item.innerText = number;
-    paginationList.append(item);
-};
-
-const renderPaginationItems = () => {
-    clearContainer(paginationList);
-        for(let i = 1; i <= paginationItemsOnPage; i++) {
-        createPaginationItems(i);
-    }
-};
-
-paginationDrop.addEventListener('click', ()=> {
-    paginationHolder.classList.toggle('hidden')
-});
-
-renderPaginationItems();
-
-paginationPrev.addEventListener('click', ()=> {
-    if (paginationPage > 1) {
-        paginationPage -= 1;
-        paginationCurrent.innerText = paginationPage;
-        loadFilms(chooseFilmsParams);
-    }
-})
-
-paginationNext.addEventListener('click', ()=> {
-    if (paginationPage < paginationItemsOnPage) {
-        paginationPage += 1;
-        paginationCurrent.innerText = paginationPage;
-        loadFilms(chooseFilmsParams);
-    }
-})
-
-paginationMaximum.addEventListener('click', ()=> {
-    paginationPage = paginationItemsOnPage;
-    paginationCurrent.innerText = paginationPage;
-    loadFilms(chooseFilmsParams);
-})
-
-paginationList.addEventListener('click', ({ target }) => {
-    if (target && target.classList.contains('pagination__item')) {
-        paginationPage = +target.innerText;
-        paginationCurrent.innerText = paginationPage;
-        loadFilms(chooseFilmsParams);
-    }
 });

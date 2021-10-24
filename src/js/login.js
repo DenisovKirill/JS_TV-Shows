@@ -6,7 +6,7 @@ export const logInit = () => {
     const loginPass = document.getElementById('userPass');
     const loginBtn = document.getElementById('loginBtn');
     const userLoggedName = document.getElementById('userLoggedName');
-    const logoutBtn = document.getElementById('logoutBtn')
+    const logoutBtn = document.getElementById('logoutBtn');
 
     document.addEventListener("DOMContentLoaded", () => {
         const isUser = localStorage.getItem("userName");
@@ -41,5 +41,5 @@ export const logInit = () => {
         loginWindow.style.display = "block";
         loginName.value = "";
         loginPass.value = "";
-    })
+    });
 }

@@ -1,4 +1,4 @@
-import { checkFavourite } from './favourite.js'
+import { checkFavourite } from './favourite.js';
 
 export const createElement = (nodeType, className) => {
     const elem = document.createElement(nodeType);

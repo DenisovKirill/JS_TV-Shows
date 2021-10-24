@@ -1,25 +1,14 @@
 import { getData } from './getData.js';
 import { handleLoad, clearContainer } from './cards.js';
-// import { filmContainer } from './script.js';
-import { chooseFilmsParams, loadFilms } from './script.js';
+import { chooseFilmsParams, searchInput, loadFilms } from './script.js';
 
 export const favouriteInit = () => {
     const favouriteContainer = document.getElementById('favouriteContainer');
-    const main = document.getElementById('main')
+    const main = document.getElementById('main');
 
     if (!localStorage.getItem('favoriteInStorage')) {
         localStorage.setItem('favoriteInStorage', JSON.stringify([]));
     };
-
-    // filmContainer.addEventListener('click', ({ target }) => {
-    //     if (target && target.classList.contains('icon-heart')) {
-    //         const filmId = +target.parentElement.getAttribute('data-id');
-    //         console.log(filmId);
-    //         addToFavourite(target, filmId);
-    //         spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
-    //         target.classList.add('icon-active')
-    //     }
-    // });
 
     main.addEventListener('click', ({ target }) => {
         if (target && target.classList.contains('icon-heart')) {
@@ -31,7 +20,7 @@ export const favouriteInit = () => {
             } else {
                 removeFromFavourite(filmId);
                 target.classList.remove('icon-active');
-                loadFilms(chooseFilmsParams);
+                loadFilms(chooseFilmsParams, searchInput.value);
             }
         }
     });
@@ -44,33 +33,21 @@ export const favouriteInit = () => {
             if (elemId === +elem.parentElement.getAttribute('data-id')) {
                 const exist = fav.find(item => +item === elemId);
                 if (!exist)  {
-                    fav = [...fav, film.id]
+                    fav = [...fav, film.id];
                 }
             }
-
         localStorage.setItem('favoriteInStorage', JSON.stringify(fav));
         spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
     };
 
     const removeFromFavourite = (id) => {
         const storageFilms = localStorage.getItem('favoriteInStorage');
-        // let fav = [...JSON.parse(storageFilms)];
         let fav = [...JSON.parse(storageFilms ?  storageFilms : JSON.stringify([]))];
         const index = fav.findIndex(item => item === id);
         fav.splice(index, 1);
         localStorage.setItem('favoriteInStorage', JSON.stringify(fav));
         spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
     };
-
-    // favouriteContainer.addEventListener('click', ({ target }) => {
-    //     if (target && target.classList.contains('icon-heart')) {
-    //         const filmId = +target.parentElement.getAttribute('data-id');
-    //         removeFromFavourite(filmId);
-    //         // addToFavourite(target, filmId);
-    //         spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
-    //         target.classList.remove('icon-active')
-    //     }
-    // });
 
     const spawnFavourite = async (data) => {
         let arr = [];
@@ -84,7 +61,6 @@ export const favouriteInit = () => {
     };
 
     spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
-    // localStorage.clear();
 }
 
 export function checkFavourite(id, elem) {

@@ -1,9 +1,9 @@
 import { API_URL } from './constants.js';
-import { paginationPage } from './script.js'
+import { paginationPage } from './pagination.js';
 
 const handleError = ({ status }) => {
     console.log('Error: ', status);
-}
+};
 
 export const getData = async (param) => {
     try {
