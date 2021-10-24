@@ -23,8 +23,8 @@ export const handleLoad = (filmData, targetBlock) => {
 
         div.setAttribute('data-id', id);
         titleElem.innerHTML = name;
-        imgElem.setAttribute('src',  `${image?.medium}` || '../img/no-img.jpg');
-        imgElem.setAttribute('alt', `${name}`);
+        imgElem.setAttribute('src',  image?.medium || '../img/no-img.jpg');
+        imgElem.setAttribute('alt', name || 'Unknown');
         div.append(titleElem, imgElem, heart);
 
         checkFavourite(id, heart);

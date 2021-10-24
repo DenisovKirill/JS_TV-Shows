@@ -1,20 +1,38 @@
 import { getData } from './getData.js';
 import { handleLoad, clearContainer } from './cards.js';
+// import { filmContainer } from './script.js';
+import { chooseFilmsParams, loadFilms } from './script.js';
 
 export const favouriteInit = () => {
     const favouriteContainer = document.getElementById('favouriteContainer');
+    const main = document.getElementById('main')
 
     if (!localStorage.getItem('favoriteInStorage')) {
         localStorage.setItem('favoriteInStorage', JSON.stringify([]));
     };
 
-    filmContainer.addEventListener('click', ({ target }) => {
+    // filmContainer.addEventListener('click', ({ target }) => {
+    //     if (target && target.classList.contains('icon-heart')) {
+    //         const filmId = +target.parentElement.getAttribute('data-id');
+    //         console.log(filmId);
+    //         addToFavourite(target, filmId);
+    //         spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
+    //         target.classList.add('icon-active')
+    //     }
+    // });
+
+    main.addEventListener('click', ({ target }) => {
         if (target && target.classList.contains('icon-heart')) {
             const filmId = +target.parentElement.getAttribute('data-id');
-            console.log(filmId);
-            addToFavourite(target, filmId);
-            spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
-            target.classList.add('icon-active')
+            if (!target.classList.contains('icon-active')) {
+                addToFavourite(target, filmId);
+                spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
+                target.classList.add('icon-active');
+            } else {
+                removeFromFavourite(filmId);
+                target.classList.remove('icon-active');
+                loadFilms(chooseFilmsParams);
+            }
         }
     });
 
@@ -39,22 +57,20 @@ export const favouriteInit = () => {
         // let fav = [...JSON.parse(storageFilms)];
         let fav = [...JSON.parse(storageFilms ?  storageFilms : JSON.stringify([]))];
         const index = fav.findIndex(item => item === id);
-        console.log('index: ', index)
         fav.splice(index, 1);
-        console.log('fav: ', fav)
         localStorage.setItem('favoriteInStorage', JSON.stringify(fav));
         spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
     };
 
-    favouriteContainer.addEventListener('click', ({ target }) => {
-        if (target && target.classList.contains('icon-heart')) {
-            const filmId = +target.parentElement.getAttribute('data-id');
-            removeFromFavourite(filmId);
-            // addToFavourite(target, filmId);
-            spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
-            target.classList.remove('icon-active')
-        }
-    });
+    // favouriteContainer.addEventListener('click', ({ target }) => {
+    //     if (target && target.classList.contains('icon-heart')) {
+    //         const filmId = +target.parentElement.getAttribute('data-id');
+    //         removeFromFavourite(filmId);
+    //         // addToFavourite(target, filmId);
+    //         spawnFavourite(JSON.parse(localStorage.getItem('favoriteInStorage')));
+    //         target.classList.remove('icon-active')
+    //     }
+    // });
 
     const spawnFavourite = async (data) => {
         let arr = [];
@@ -74,8 +90,6 @@ export const favouriteInit = () => {
 export function checkFavourite(id, elem) {
     if (localStorage.getItem('favoriteInStorage')) {
         const favourites = JSON.parse(localStorage.getItem('favoriteInStorage'));
-        favourites.forEach(item => {
-        })
         if (favourites.some((el) => el === id)) {
             elem.classList.add('icon-active');
         }

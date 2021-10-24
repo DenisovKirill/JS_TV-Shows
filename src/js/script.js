@@ -1,3 +1,4 @@
+import { logInit } from './login.js';
 import { getData } from './getData.js';
 import { tabsInit } from './tabs.js';
 import { createElement, handleLoad, clearContainer } from './cards.js';
@@ -6,15 +7,15 @@ import { favouriteInit } from './favourite.js';
 
 export const searchInput = document.getElementById('inp');
 export const tabsContent = document.querySelectorAll('.tabsContent');
+export const filmContainer = document.getElementById('filmContainer');
 const serverBtn = document.getElementById('serverButton');
-const filmContainer = document.getElementById('filmContainer');
 const paginationList = document.getElementById('pagination');
 const genreSelection = document.getElementById('genre');
 const langSelection = document.getElementById('language');
 const itemsPerPage = document.getElementById('itemsPerPage');
+const filterHolder = document.querySelector('.filter__holder');
 const backToMain = document.querySelector('.search__return-btn');
 const paginationBlock = document.querySelector('.pagination')
-const filterHolder = document.querySelector('.filter__holder');
 const paginationDrop = document.querySelector('.pagination__drop');
 const paginationHolder = document.querySelector('.pagination__holder')
 const paginationPrev = document.querySelector('.pagination__prev-btn');
@@ -30,13 +31,14 @@ let language = langSelection.value;
 let filmsOnPage = itemsPerPage.value;
 let films = [];
 
+logInit();
 tabsInit();
 modalInit();
 favouriteInit();
 
 //Search and load
 
-const chooseFilmsParams = {
+export const chooseFilmsParams = {
     films: films,
     genre: genre,
     language: language,
@@ -45,7 +47,7 @@ const chooseFilmsParams = {
 
 const chooseFilms = (args) => {
     const chosen = args.films.map((item) => (item.show ? item.show : item));
-
+    //Переписать в свич?
     if (args.genre === 'All' && args.language === 'All') {
         return chosen.slice(0, args.number);
     }
@@ -66,7 +68,7 @@ const chooseFilms = (args) => {
     }
 };
 
-const loadFilms = async (args, attr) => {
+export const loadFilms = async (args, attr) => {
     args.films = await getData(attr);
     const filtered = args.films.length ? chooseFilms(args) : [];
     if (filtered.length) {
@@ -89,24 +91,24 @@ const changeOnSearch = () => {
 
 langSelection.addEventListener('change', () => {
     chooseFilmsParams.language = langSelection.value;
-    loadFilms(chooseFilmsParams);
+    loadFilms(chooseFilmsParams, searchInput.value);
     changeOnSearch();
 });
 
 genreSelection.addEventListener('change', async () => {
     chooseFilmsParams.genre = genreSelection.value;
-    loadFilms(chooseFilmsParams);
+    loadFilms(chooseFilmsParams, searchInput.value);
     changeOnSearch();
 });
 
 itemsPerPage.addEventListener('change', () => {
     chooseFilmsParams.number = itemsPerPage.value;
-    loadFilms(chooseFilmsParams);
+    loadFilms(chooseFilmsParams, searchInput.value);
     // changeOnSearch();
 });
 
 
-const resetPage = () => {
+export const resetPage = () => {
     genreSelection.value = 'All';
     langSelection.value = 'All';
     chooseFilmsParams.genre = 'All';
@@ -119,12 +121,6 @@ const resetPage = () => {
     searchInput.value = '';
     loadFilms(chooseFilmsParams);
 };
-
-window.onload = function() {
-    resetPage();
-  };
-
-// loadFilms(chooseFilmsParams);
 
 serverBtn.addEventListener('click', () => {
     loadFilms(chooseFilmsParams, searchInput.value);
