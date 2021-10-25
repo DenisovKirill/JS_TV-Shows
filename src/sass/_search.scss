@@ -4,6 +4,9 @@
     }
 
     &__bar {
+        // display: flex;
+        // justify-content: space-between;
+        position: relative;
         width: 60%;
         margin: 10px auto;
         background: $main-color-1;
@@ -35,14 +38,17 @@
         }
     }
 
-    &__return-btn {display: none;
+    &__return-btn {
+        display: none;
         position: absolute;
-        right: 500px;
-        top: 151px;
+        right: -120px;
+        top: -5px;
+        width: 100px;
         background: $main-color-1;
         border: none;
         padding: 10px;
         margin: 5px;
+        // margin-right: 60px;
         border-radius: 25px;
         cursor: pointer;
         transition: 0.5s all;;

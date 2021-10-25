@@ -1,6 +1,6 @@
 import { getData } from './getData.js';
 import { handleLoad, clearContainer } from './cards.js';
-import { chooseFilmsParams, searchInput, loadFilms } from './script.js';
+import { chooseFilmsParams, searchInput, loadFilms } from './search.js';
 
 export const favouriteInit = () => {
     const favouriteContainer = document.getElementById('favouriteContainer');

@@ -1,4 +1,4 @@
-import { resetPage } from './script.js';
+import { resetPage } from './search.js';
 
 export const logInit = () => {
     const loginWindow = document.getElementById('login');

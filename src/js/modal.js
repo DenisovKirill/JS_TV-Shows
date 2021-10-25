@@ -1,6 +1,6 @@
 import { getData } from './getData.js';
 import { createElement, clearContainer } from './cards.js';
-import { tabsContent } from './script.js'
+import { tabsContent } from './search.js'
 
 export const modalInit = () => {
     const modal = document.getElementById('modal');

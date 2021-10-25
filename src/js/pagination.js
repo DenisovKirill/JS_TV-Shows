@@ -1,5 +1,5 @@
 import { createElement, clearContainer } from './cards.js';
-import { paginationCurrent, chooseFilmsParams, loadFilms} from './script.js';
+import { paginationCurrent, chooseFilmsParams, loadFilms} from './search.js';
 
 export let paginationPage = 1;
 

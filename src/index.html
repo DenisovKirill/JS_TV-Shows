@@ -9,9 +9,10 @@
 </head>
 <body>
     <div class="wrapper" id="wrapper">
-        <div class="login" id="login">
+        <div class="login" id="login" style="display: none">
             <div class="login__window">
                 <div class="login__inner">
+                    <h3 class="login__header">Please login</h3>
                     <form  class="login__form">
                         <div class="login__item">
                             <input class="login__inp" id="userName" type="text">
@@ -20,7 +21,7 @@
                             <input class="login__inp" id="userPass" type="password">
                         </div>
                         <div class="login__item">
-                            <button type="button" class="login__btn" id="loginBtn">Click Here</button>
+                            <button type="button" class="login__btn" id="loginBtn">Login</button>
                         </div>
                     </form>
                 </div>
@@ -55,8 +56,8 @@
                     <form class="search__bar">
                         <input class="search__input" id="inp" type="text">
                         <button type='button' class="search__btn" id="serverButton">Search</button>
+                        <button type='button' class="search__return-btn">Go Back</button>
                     </form>
-                    <button class="search__return-btn">Go Back</button>
                 </div>
                 <div class="container">
                     <div class="filter__holder">
@@ -83,6 +84,8 @@
                             <option value="4">4</option>
                             <option value="8">8</option>
                             <option selected value="12">12</option>
+                            <option value="16">16</option>
+                            <option value="20">20</option>
                         </select>
                     </div>
                 </div>
@@ -123,6 +126,11 @@
             </div>
         </main>
     </div>
+    <footer class="footer">
+        <div class="container">
+            <p>Created by Kirill Denisov, 2021</p>
+        </div>
+    </footer>
     <script type="module" src="js/script.js"></script>
     <!-- <script type='text/javascript' src="../dist/bundle.js"></script> -->
 </body>

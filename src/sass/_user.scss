@@ -1,5 +1,29 @@
 .user {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 50px;
+
+    &__name,
+    &__logout-btn {
+        color: #000;
+        font-size: 18px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    &__logout-btn {
+        width: 120px;
+        padding: 5px;
+        background: $main-color-3;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+        color: #FFF;
+        transition: all 0.5s;
+
+        &:hover {
+            background: $main-color-2;
+        }
+    }
 }
