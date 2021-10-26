@@ -48,10 +48,9 @@
         border: none;
         padding: 10px;
         margin: 5px;
-        // margin-right: 60px;
         border-radius: 25px;
         cursor: pointer;
-        transition: 0.5s all;;
+        transition: 0.5s all;
 
         &:hover {
             background: $main-color-3;
